@@ -1,21 +1,37 @@
 package uk.ac.westminster.products_api;
 
-public class PhysicalProduct extends Product {
+public class PhysicalProduct extends Product implements Discountable {
 
     private double weightKg;
     private String dimensions;
+    private double discountedPrice;
 
-    // (a) Empty no-arg constructor required by Jackson
     public PhysicalProduct() {}
 
-    // (b) Full constructor taking inherited and new fields
     public PhysicalProduct(Long id, String name, double price, double weightKg, String dimensions) {
         super(id, name, price); // MUST be the first statement
         this.weightKg = weightKg;
         this.dimensions = dimensions;
+        this.discountedPrice = price;
     }
 
-    // (c) Getters for physical-specific fields
+    @Override
+    public String getSummary() {
+        return "Physical: " + getName()
+                + " | Weight: " + weightKg + "kg";
+    }
+
+    @Override
+    public void applyDiscount(double rate) {
+        double capped = Math.min(rate, 0.20);
+        this.discountedPrice = getPrice() * (1 - capped);
+    }
+
+    @Override
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
     public double getWeightKg() {
         return weightKg;
     }

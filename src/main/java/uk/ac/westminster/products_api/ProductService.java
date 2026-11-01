@@ -46,4 +46,22 @@ public class ProductService {
                 .filter(p -> p.getName().contains(name))
                 .toList();
     }
+
+    public List<String> getAllSummaries() {
+        List<String> summaries = new ArrayList<>();
+
+        /* The error message recorded:
+        java: cannot find symbol
+        symbol:   method applyDiscount(double)
+        location: variable p of type uk.ac.westminster.products_api.Product
+         */
+
+        for(Product p : products ) {
+            if (p instanceof Discountable d) {
+                d.applyDiscount(0.10);
+            }
+            summaries.add(p.getSummary());
+        }
+        return  summaries;
+    }
 }
