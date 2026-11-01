@@ -1,0 +1,70 @@
+@startuml
+
+abstract class Product {
+    - id : Long
+    - name : String
+    - price : double
+    + getId() : Long
+    + getName() : String
+    + getPrice() : double
+    + {abstract} getSummary() : String
+}
+
+interface Discountable {
+    + applyDiscount(rate : double) : void
+    + getDiscountedPrice() : double
+}
+
+class DigitalProduct {
+    - downloadUrl : String
+    - fileSizeMB : double
+    - discountedPrice : double
+    + getDownloadUrl() : String
+    + getFileSizeMB() : double
+    + getSummary() : String
+    + applyDiscount(rate : double) : void
+    + getDiscountedPrice() : double
+}
+
+class PhysicalProduct {
+    - weightKg : double
+    - dimensions : String
+    - discountedPrice : double
+    + getWeightKg() : double
+    + getDimensions() : String
+    + getSummary() : String
+    + applyDiscount(rate : double) : void
+    + getDiscountedPrice() : double
+}
+
+class ProductService {
+    - products : List<Product>
+    - nextId : Long
+    + getAllProducts() : List<Product>
+    + addProduct(product : Product) : Product
+    + getProductById(id : Long) : Optional<Product>
+    + deleteProduct(id : Long) : void
+    + findByName(name : String) : List<Product>
+    + getAllSummaries() : List<String>
+}
+
+class ProductController {
+    - productService : ProductService
+    + getAllProducts() : List<Product>
+    + getProductById(id : Long) : Product
+    + addProduct(product : DigitalProduct) : Product
+    + deleteProduct(id : Long) : void
+    + search(name : String) : List<Product>
+    + getSummaries() : List<String>
+}
+
+Product <|-- DigitalProduct
+Product <|-- PhysicalProduct
+
+Discountable <|.. DigitalProduct
+Discountable <|.. PhysicalProduct
+
+ProductService --> Product : manages
+ProductController ..> ProductService : uses
+
+@enduml
